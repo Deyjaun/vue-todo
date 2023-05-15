@@ -1,7 +1,7 @@
 <script setup>
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
 
-let todos = ref([])
+let todos = ref(JSON.parse(window.localStorage.getItem('todos')))
 let touch = ref('')
 
 function uno(){
@@ -18,7 +18,14 @@ function deleteI (index) {
   todos.value.splice(index, 1)
 
 }
+
+watch(todos, function(value) {
+  window.localStorage.setItem('todos', JSON.stringify(value))
+}, {deep: true})
 </script>
+
+
+
 
 <template>
 <h1>My Todo Application</h1>
