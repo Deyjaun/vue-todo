@@ -1,6 +1,6 @@
 <script setup>
 import {ref, watch} from 'vue'
-
+let filter = ref('all')
 let todos = ref(JSON.parse(window.localStorage.getItem('todos')))
 let touch = ref('')
 
@@ -22,6 +22,17 @@ function deleteI (index) {
 watch(todos, function(value) {
   window.localStorage.setItem('todos', JSON.stringify(value))
 }, {deep: true})
+
+
+function todoFilter (todo) {
+if (filter.value == 'active') {
+return todo.complete == false
+} else if (filter.value == 'complete') {
+return todo.complete == true
+} else {
+  return true
+}
+}
 </script>
 
 
@@ -29,13 +40,27 @@ watch(todos, function(value) {
 
 <template>
 <h1>My Todo Application</h1>
-<li v-for="(todo, index) in todos" :class="{completed: todo.complete}">
-  <input type="checkbox" v-model="todo.complete">
+<li v-for="(todo, index) in todos.filter(todoFilter)" :class="{completed: todo.complete}">
+  <label class="container"><input type="checkbox" v-model="todo.complete"><span class="checkmark"></span></label>
   <button @click="deleteI(index)">🗑</button>
   {{todo.text}}
 </li>
 <input v-model="touch" @keydown.enter="uno">
 <button @click="uno">Add Todo</button>
+<hr>
+
+<input name="filter" type="radio"  value="all" v-model="filter">
+<label>All</label>
+
+
+<input name="filter" type="radio"  value="active" v-model="filter">
+<label>Active</label>
+
+
+<input name="filter" type="radio"  value="complete" v-model="filter">
+<label>Complete</label>
+
+
 </template>
 
 <style>
@@ -59,10 +84,78 @@ button {
     }
 
     .completed {
-      background-color: rgb(26, 255, 0);
+      background-color: rgb(78, 81, 77);
       text-decoration: line-through;
 
 
+}
+
+
+/* Customize the label (the container) */
+.container {
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 7px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 </style>
 
