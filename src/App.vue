@@ -14,6 +14,17 @@ touch.value = ''
 
 }
 
+function deleteLast () {
+  if(touch.value == "") {
+    todos.value.pop()
+  }
+ 
+}
+
+function dos(){
+  todos.value = []
+}
+
 function deleteI (index) {
   todos.value.splice(index, 1)
 
@@ -33,6 +44,13 @@ return todo.complete == true
   return true
 }
 }
+
+
+function activeFilter (todo) {
+  return todo.complete == false
+}
+
+
 </script>
 
 
@@ -40,15 +58,15 @@ return todo.complete == true
 
 <template>
 <h1>My Todo Application</h1>
-<li v-for="(todo, index) in todos.filter(todoFilter)" :class="{completed: todo.complete}">
-  <label class="container"><input type="checkbox" v-model="todo.complete"><span class="checkmark"></span></label>
-  <button @click="deleteI(index)">🗑</button>
-  {{todo.text}}
-</li>
-<input v-model="touch" @keydown.enter="uno">
-<button @click="uno">Add Todo</button>
+
+<div class="todo-app">
+
+<p>You have {{todos.filter(activeFilter).length}} items left</p>
+
 <hr>
 
+
+<p v-if="todos.length > 0">
 <input name="filter" type="radio"  value="all" v-model="filter">
 <label>All</label>
 
@@ -59,27 +77,77 @@ return todo.complete == true
 
 <input name="filter" type="radio"  value="complete" v-model="filter">
 <label>Complete</label>
+</p>
 
+<hr>
+
+
+<li v-for="(todo, index) in todos.filter(todoFilter)" :class="{completed: todo.complete}" class="myDIV">
+  <label class="container"><input type="checkbox" v-model="todo.complete"><span class="checkmark"></span></label>
+  <button @click="deleteI(index)" class="hide">🗑</button>
+  {{todo.text}}
+</li>
+<input v-model="touch" @keydown.enter="uno" @keydown.delete="deleteLast">
+<button @click="uno">Add Todo</button>
+<button @click="dos">Clear</button>
+
+</div>
 
 </template>
 
 <style>
+
+.hide {
+  display: none;
+}
+
+.myDIV:hover > .hide {
+  display: inline-block;
+  color: green;
+}
+
+
+
+
+
+.todo-app {
+  width: 100%;
+  max-width: 540px;
+  background-color: #d72d7c;
+  margin: 0% auto 20px;
+  padding: 40px 30px 70px;
+  border-radius: 10px;
+  box-shadow: 20px 20px 20px 20px #000000;
+
+
+
+}
+
+
+
 body {
   font-weight: bold;
     font-size: large;
-color: #000000;
-background-color: #0037ff;
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg stroke='%23FFFFFF' stroke-width='100' stroke-opacity='0' %3E%3Ccircle fill='%230D00FF' cx='0' cy='0' r='1800'/%3E%3Ccircle fill='%230034ff' cx='0' cy='0' r='1700'/%3E%3Ccircle fill='%23004cff' cx='0' cy='0' r='1600'/%3E%3Ccircle fill='%23005eff' cx='0' cy='0' r='1500'/%3E%3Ccircle fill='%23006dff' cx='0' cy='0' r='1400'/%3E%3Ccircle fill='%23007aff' cx='0' cy='0' r='1300'/%3E%3Ccircle fill='%230087ff' cx='0' cy='0' r='1200'/%3E%3Ccircle fill='%230092ff' cx='0' cy='0' r='1100'/%3E%3Ccircle fill='%23009dff' cx='0' cy='0' r='1000'/%3E%3Ccircle fill='%2300a8ff' cx='0' cy='0' r='900'/%3E%3Ccircle fill='%2300b1ff' cx='0' cy='0' r='800'/%3E%3Ccircle fill='%2300bbff' cx='0' cy='0' r='700'/%3E%3Ccircle fill='%2300c4ff' cx='0' cy='0' r='600'/%3E%3Ccircle fill='%2300cdff' cx='0' cy='0' r='500'/%3E%3Ccircle fill='%2300d6ff' cx='0' cy='0' r='400'/%3E%3Ccircle fill='%2300deff' cx='0' cy='0' r='300'/%3E%3Ccircle fill='%2300e6ff' cx='0' cy='0' r='200'/%3E%3Ccircle fill='%2300EEFF' cx='0' cy='0' r='100'/%3E%3C/g%3E%3C/svg%3E");
+color: #fefefe;
+background-color: #03FF41;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg stroke='%2352FFEA' stroke-width='100' stroke-opacity='0' %3E%3Ccircle fill='%2303FF41' cx='0' cy='0' r='1800'/%3E%3Ccircle fill='%236df500' cx='0' cy='0' r='1700'/%3E%3Ccircle fill='%2398ea00' cx='0' cy='0' r='1600'/%3E%3Ccircle fill='%23badd00' cx='0' cy='0' r='1500'/%3E%3Ccircle fill='%23d7cf00' cx='0' cy='0' r='1400'/%3E%3Ccircle fill='%23f1bf00' cx='0' cy='0' r='1300'/%3E%3Ccircle fill='%23ffad00' cx='0' cy='0' r='1200'/%3E%3Ccircle fill='%23ff9800' cx='0' cy='0' r='1100'/%3E%3Ccircle fill='%23ff8100' cx='0' cy='0' r='1000'/%3E%3Ccircle fill='%23ff6500' cx='0' cy='0' r='900'/%3E%3Ccircle fill='%23ff4131' cx='0' cy='0' r='800'/%3E%3Ccircle fill='%23ff0051' cx='0' cy='0' r='700'/%3E%3Ccircle fill='%23ff006e' cx='0' cy='0' r='600'/%3E%3Ccircle fill='%23ff008b' cx='0' cy='0' r='500'/%3E%3Ccircle fill='%23ff00a9' cx='0' cy='0' r='400'/%3E%3Ccircle fill='%23ff00c7' cx='0' cy='0' r='300'/%3E%3Ccircle fill='%23ff00e4' cx='0' cy='0' r='200'/%3E%3Ccircle fill='%23F500FF' cx='0' cy='0' r='100'/%3E%3C/g%3E%3C/svg%3E");
 background-attachment: fixed;
 background-size: cover;
+font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+text-align: center;
 }
+
+button:hover{
+background-color: rgb(0, 0, 0);
+}
+
 button {
     color: rgb(255, 255, 255);
-    background-color: rgb(1, 197, 251);
+    background-color: rgb(251, 97, 1);
     font-size: 85%;
     font-weight: bold;
     border-radius: 15%;
-    border-color: rgb(85, 0, 255);
+    border-color: rgb(0, 0, 0);
     border-width: 7px;
     }
 
@@ -120,12 +188,12 @@ button {
   left: 0;
   height: 25px;
   width: 25px;
-  background-color: #eee;
+  background-color: rgb(255, 255, 255);
 }
 
 /* On mouse-over, add a grey background color */
 .container:hover input ~ .checkmark {
-  background-color: #ccc;
+  background-color: rgb(0, 0, 0);
 }
 
 /* When the checkbox is checked, add a blue background */
@@ -142,7 +210,7 @@ button {
 
 /* Show the checkmark when checked */
 .container input:checked ~ .checkmark:after {
-
+  display: block;
 }
 
 /* Style the checkmark/indicator */
